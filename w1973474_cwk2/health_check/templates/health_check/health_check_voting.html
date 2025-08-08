@@ -1,0 +1,73 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'health_check/css/health_check_voting.css' %}">
+{% block content %}
+    <div class="sidebar">
+        <div>
+            <div style="font-size: 24px; font-weight: bold; text-align: center;">Logo</div>
+            <nav>
+                <a href="{% url 'health_check_voting' %}">Health Check</a>
+                <a href="#">Report</a>
+                <a href="#">Profiles</a>
+            </nav>
+        </div>
+        <div>
+            <form method="POST" action="{% url 'logout' %}" style="display: flex; justify-content: center;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </div>
+    </div>
+    <div class="main">
+        <div class="header">
+            <h1>Dashboard</h1>
+            <label><input type="checkbox">Toggle</label>
+        </div>
+
+        <div class="content">
+            <div class="welcome">
+                <div class="avatar"></div>
+                <div>
+                    {% if request.user.is_authenticated %}
+                        <h2>Welcome, {{ request.user.first_name|default:request.user.username }}</h2>
+                    {% else %}
+                        <h2>Welcome, Guest</h2>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2>Information</h2>
+                <p>
+                    Welcome to the Health Check. The following questions assess key qualities of a team such as quality standard code, collaboration,
+                    and release processes. Feedback is mandatory in viewing strong points and weaknesses to build upon. Take your time choosing your
+                    preferred option diligently.
+                </p>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="question-block">
+                    <h3>How would you rate the overall quality and maintainability of your team's codebase?</h3>
+                    <p>A well-maintained codebase makes development smoother, reduces technical debt, and helps onboard new team members efficiently.</p>
+
+                    <label><input type="radio" name="codebase-quality" value="green">Green (Good) - "The codebase is clean, well-documented, and easy to work with."</label><br>
+                    <label><input type="radio" name="codebase-quality" value="orange">Orange (Mild) - "There are some areas need of improvement, but can be managed with little difficulty."</label><br>
+                    <label><input type="radio" name="codebase-quality" value="red">Red (Critical) - "The codebase is experiencing major flaws and takes up too much developement time."</label><br>
+                </div>
+                
+                <div class="question-block">
+                    <h3>How supported do you feel in maintaining a healthy work-life balance?</h3>
+                    <p>A balanced workload is key to achieve maxmimum prodctivity and well-being.</p>
+
+                    <label><input type="radio" name="work-life_balance" value="green">Green (Good) - "I can fully maintain a good work-life balance."</label><br>
+                    <label><input type="radio" name="work-life_balance" value="orange">Orange (Mild) - "There are some problems with the balance, but can be worked around."</label><br>
+                    <label><input type="radio" name="work-life_balance" value="red">Red (Critical) - "Stress tends to build up more given the amount of workload being set."</label><br>
+                </div>
+
+                <button type="submit">Submit</button>
+
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Signup</title>
+    <link rel="stylesheet" href="{% static 'health_check/css/signup.css' %}">
+</head>
+<body>
+    {% block content %}
+    <div class="signup-container">
+        <h2>Signup</h2>
+        <form method="POST" action="/w1973474/signup/">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit" class="signup-button">Sign Up</button>
+        </form>
+
+        <div class="existing-account">
+            Already have an account? <a href="{% url 'login' %}">Login</a>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>
