@@ -1,0 +1,107 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{% static 'health_check/css/dashboard.css' %}">
+</head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+{% block content %}
+<body>
+    <div class="sidebar">
+        <div>
+            <div style="font-size: 24px; font-weight: bold; text-align: center;">Logo</div>
+            <nav>
+                <a href="{% url 'health_check_voting' %}">Health Check</a>
+                <a href="#">Report</a>
+                <a href="#">Profiles</a>
+            </nav>
+        </div>
+        <div>
+            <form method="POST" action="{% url 'logout' %}" style="display: flex; justify-content: center;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="header">
+            <h1>Dashboard</h1>
+            <label><input type="checkbox">Toggle</label>
+        </div>
+
+        <div class="content">
+            <div class="welcome">
+                <div class="avatar"></div>
+                <div>
+                    {% if request.user.is_authenticated %}
+                        {% if request.user.first_name %}
+                            <h2>Welcome, {{ request.user.first_name }}</h2>
+                        {% else %}
+                            <h2>Welcome, {{ request.user.username }}</h2>
+                        {% endif %}
+                    {% else %}
+                        <h2>Welcome, Guest</h2>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>Last Vote Progress</h3>
+                <canvas id="voteChart" width="400" height="130"></canvas>
+            </div>
+
+            <div class="buttons">
+                <button onclick="window.location.href='#'">Start Voting</button>
+                <button onclick="window.location.href='#'">View Reports</button>
+            </div>
+        </div>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const data = {
+        labels: {{ vote_data.labels|safe }},
+        datasets: [
+            {
+                label: 'Votes',
+                data: {{vote_data.data1|safe }},
+                backgroundColor: ['rgba(255, 0, 0, 0.3)', 'rgba(255, 128, 0, 0.3)', 'rgba(0, 255, 0, 0.3)'],
+            }
+        ]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Voting Results by Category'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    stacked: true
+                },
+                x: {
+                    stacked: true
+                }
+            }
+        }
+    };
+
+    window.addEventListener('load', function() {
+        const ctx = document.getElementById('voteChart').getContext('2d');
+        new Chart(ctx, config);
+    });
+</script>
+{% endblock %}
+</body>
+</html>

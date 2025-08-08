@@ -1,0 +1,40 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'health_check/css/login.css' %}">
+</head>
+
+<body>
+    {% block content %}
+    <div class="login-container">
+        <h2>Login</h2>
+        <form method="POST" action="{% url "login" %}">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            {% for field in form %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <p class="error">{{ field.errors|striptags }}</p>
+                {% endif %}
+            {% endfor %}
+
+            <div class="forgot-password">
+                <a href="{% url 'password_reset' %}">forgot password?</a>
+            </div>
+
+            <button type="submit" class="login-button">Login</button>
+        </form>
+
+        <div class="signup-text">
+            Don't have an account? <a href="{% url 'signup' %}">SignUp</a>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>
